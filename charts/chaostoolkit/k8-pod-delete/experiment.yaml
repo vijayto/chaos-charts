@@ -68,5 +68,9 @@ spec:
     - name: REPORT_ENDPOINT
       value: 'none'
 
+    - name: TEST_NAMESPACE
+      value: ''
+
+
     labels:
       name: k8-pod-delete

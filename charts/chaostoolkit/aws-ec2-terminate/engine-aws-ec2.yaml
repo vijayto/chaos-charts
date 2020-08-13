@@ -1,0 +1,54 @@
+# chaosengine.yaml
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: aws-ec2-terminate
+  namespace: default
+spec:
+  #ex. values: ns1:name=percona,ns2:run=nginx  
+  appinfo: 
+    appns: default
+    applabel: "app=test"
+    appkind: deployment
+  jobCleanUpPolicy: delete
+  monitoring: false
+  annotationCheck: 'false'
+  engineState: 'active'
+  chaosServiceAccount: chaos-admin
+  components:
+    runner:
+      runnerannotation:
+        iam.amazonaws.com/role: "pod-iam-role"
+  experiments:
+    - name: aws-ec2-terminate
+      spec:
+        components:
+          experimentannotation:
+            iam.amazonaws.com/role: "pod-iam-role"
+          env: 
+            - name: NAME_SPACE
+              value: default
+            - name: LABEL_NAME
+              value: app=test
+            - name: APP_ENDPOINT
+              value: localhost
+            - name: FILE
+              value: 'ec2-delete.json'
+            - name: AWS_ROLE
+              value: 'chaos_role_at_aws_with_permissions_for_ec2_terminate'
+            - name: AWS_ACCOUNT
+              value: ''
+            - name: AWS_REGION
+              value: ''
+            - name: AWS_AZ
+              value: ''
+            - name: AWS_RESOURCE
+              value: 'ec2-iks'  
+            - name: AWS_SSL
+              value: 'false'
+            - name: REPORT
+              value: 'true'
+            - name: REPORT_ENDPOINT
+              value: 'none'
+            - name: TEST_NAMESPACE
+              value: 'default'

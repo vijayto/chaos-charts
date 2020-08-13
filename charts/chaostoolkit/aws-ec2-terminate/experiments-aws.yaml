@@ -1,13 +1,11 @@
----
-
 apiVersion: litmuschaos.io/v1alpha1
 description:
   message: |
-    Deletes a pod belonging to a deployment/statefulset/daemonset
+    Deletes an aws instance belonging to a deployment/statefulset/daemonset
 kind: ChaosExperiment
 metadata:
-  name: k8-pod-delete
-  version: 0.0.4
+  name: aws-ec2-terminate
+  version: 0.0.1
 spec:
   definition:
     scope: Namespaced
@@ -42,40 +40,65 @@ spec:
     image: "litmuschaos/chaostoolkit:latest"
     args:
     - -c
-    - python /app/chaos/chaostest/kubernetes/k8_wrapper.py; exit 0
+    - python /app/chaos/chaostest/aws/aws_wrapper.py ; exit 0
     command:
     - /bin/bash
     env:
+
     - name: CHAOSTOOLKIT_IN_POD
       value: 'true'
 
     - name: FILE
-      value: 'pod-app-kill-count.json'
+      value: 'ec2-delete.json'
 
     - name: NAME_SPACE
-      value: ''
+      value: 'default'
 
     - name: LABEL_NAME
-      value: ''
+      value: 'app=test'
 
     - name: APP_ENDPOINT
-      value: ''
+      value: 'localhost'
 
+    # Period to wait before injection of chaos in sec
     - name: PERCENTAGE
       value: '50'
 
+    # Variable to set for custom report upload
     - name: REPORT
-      value: 'true'
+      value: 'false'
 
+    # Variable to set for report upload endpoint
     - name: REPORT_ENDPOINT
       value: 'none'
 
-    - name: TEST_NAMESPACE
+    # Variable to set for AWS account
+    - name: AWS_ACCOUNT
       value: ''
 
+    # Variable to set for AWS role
+    - name: AWS_ROLE
+      value: ''
+
+    # Variable to set for AWS region
+    - name: AWS_REGION
+      value: ''
+
+    # Variable to set for AWS AZ
+    - name: AWS_AZ
+      value: ''
+
+    # Variable to set for AWS RESOURCE
+    - name: AWS_RESOURCE
+      value: 'ec2-iks'
+
+    # Variable to set for AWS SSL
+    - name: AWS_SSL
+      value: 'false'
+
+    # Variable which indicates where the test results CRs will be persisted
+    - name: TEST_NAMESPACE
+      value: 'default'
 
     labels:
-      name: k8-pod-delete
-
----
-
+      name: aws-ec2-terminate
